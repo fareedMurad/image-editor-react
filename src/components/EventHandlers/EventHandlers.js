@@ -7,11 +7,11 @@ const onImageChange1 = (e, setImg) => {
 }
 
  //image downloading method starts
- const imageDownload = async (ref,) => {
-    if (ref.current === null) {
+ const imageDownload = async (current,) => {
+    if (current === null) {
         return
     }
-    toPng(ref.current)
+    toPng(current)
         .then(async (dataUrl) => {
             const link = document.createElement('a')
             link.download = 'Download.png'

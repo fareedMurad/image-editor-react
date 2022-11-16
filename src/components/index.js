@@ -4,7 +4,7 @@ import Draggable from 'react-draggable'
 import './index.css'
 
 function Index() {
-    const [img, setImg] = useState("https://img.freepik.com/premium-photo/beautiful-emerald-lake-yoho-national-park-british-columbia-canada_131985-177.jpg?w=2000");
+    const [img, setImg] = useState("");
 
     const [blur, setBlur] = useState(0);
     const [brightness, setBrightness] = useState(1);
@@ -26,7 +26,7 @@ function Index() {
 
     //borders
     const [borderWidth, setBorderWidth] = useState(0)
-    const [borderColor, setBorderColor] = useState()
+    const [borderColor, setBorderColor] = useState('#000')
     const [borderRadius, setBorderRadius] = useState(0)
 
     //draggable text 
@@ -305,7 +305,7 @@ function Index() {
             </div>
             <div className="grid grid-cols-1 md:justify-content-center mx-3">
                 <div className="justify-self-center imgContainer" ref={ref} >
-                    <img src={img} alt="Example" style={styles} />
+                   {img && <img src={img} alt="Example" style={styles} /> }
                     <Draggable>
                         <h1 style={draggableStyles}>{draggableText}</h1>
                     </Draggable>
@@ -314,9 +314,9 @@ function Index() {
                     {inputs.map(item => {
                         return (
                             <div key={item.id} className="my-2 grid grid-cols-1 ml-5">
-                                <div className={`collapse my-3 place-self-center`} id={`editor${item.id}`} >
+                                <div className={` my-3 place-self-center`} id={`editor${item.id}`} >
                                     <p>{item.sliderLabel}</p>
-                                    <input type={item.type} min={item.min} step={item.step} max={item.max}
+                                    <input disabled={!img} type={item.type} min={item.min} step={item.step} max={item.max}
                                         value={item.value} onChange={item.handler}
                                     />
                                 </div>
@@ -331,45 +331,46 @@ function Index() {
                 </div>
                 <div className="grid grid-cols-1 place-content-center">
                     <div key="19120019" className="my-2 grid grid-cols-1 ml-5">
-                        <div className={`collapse my-3 place-self-center`} id={`editorText`} >
+                        <div className={` my-3 place-self-center`} id={`editorText`} >
                             <p>Text:</p>
-                            <input type="text" className="border-2 border-violet-600 px-2 py-1 rounded-md" placeholder="Enter your text..."
+                            <input disabled={!img} type="text" className="border-2 border-violet-600 px-2 py-1 rounded-md" placeholder="Enter your text..."
                                 value={draggableText} onChange={e => setDragableText(e.target.value)}
                             />
                         </div>
                         <small className="text-slate-600 my-2 text-center" id='editorText'>
                             Drag the text below the image to anywhere inside the image frame
                         </small>
-                        <div className={`collapse my-3 place-self-center`} id={`editorText`} >
+                        <div className={` my-3 place-self-center`} id={`editorText`} >
                             <p>Text Color</p>
-                            <input type="color" value={draggableTextColor} onChange={e => setDragableTextColor(e.target.value)}
+                            <input disabled={!img} type="color" value={draggableTextColor} onChange={e => setDragableTextColor(e.target.value)}
                             />
                         </div>
-                        <div className={`collapse my-3 place-self-center`} id={`editorText`} >
+                        <div className={` my-3 place-self-center`} id={`editorText`} >
                             <p>Text Size</p>
-                            <input type="range" min="20px" max="100px" step="1" value={draggableTextSize}
+                            <input disabled={!img} type="range" min="20px" max="100px" step="1" value={draggableTextSize}
                                 onChange={e => setDragableTextSize(e.target.value)}
                             />
                         </div>
-                        <div className={`collapse my-3 place-self-center`} id={`editorText`} >
+                        <div className={` my-3 place-self-center`} id={`editorText`} >
                             <p>Text Boldness</p>
-                            <input type="range" min="100" max="900" step="100" value={draggableTextWeight}
+                            <input disabled={!img} type="range" min="100" max="900" step="100" value={draggableTextWeight}
                                 onChange={e => setDragableTextWeight(e.target.value)}
                             />
                         </div>
-                        <button type="button" data-bs-toggle="collapse" data-bs-target={`#editorText`}
-                            aria-expanded="false" aria-controls="collapseExample"
+                        {/* <button type="button" data-bs-target={`#editorText`}
+                            aria-expanded="false"
                             className="place-self-center text-white bg-gradient-to-br from-purple-600 to-blue-500 font-medium rounded-lg text-sm w-24 py-2.5">
                             Add Text
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             </div>
             <div className="flex justify-center">
                 <div className="grid justify-content-center my-5">
-                    <button onClick={() => {
-                        imageDownload(ref)
-                        window.location.reload()
+                    <button disabled={!img} onClick={(e) => {
+                        e.preventDefault()
+                        imageDownload(ref.current)
+                        // window.location.reload()
                     }
                     } className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-slate-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-violet-700 dark:text-violet-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
                         <span className="relative px-3 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
@@ -378,7 +379,7 @@ function Index() {
                     </button>
                 </div>
                 <div className="grid justify-content-center my-5">
-                    <button onClick={onReset} className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-slate-900 rounded-lg group bg-gradient-to-br from-red-600 to-rose-500 group-hover:from-red-600 group-hover:to-rose-500 hover:text-violet-300 dark:text-violet-00 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+                    <button disabled={!img} onClick={onReset} className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-slate-900 rounded-lg group bg-gradient-to-br from-red-600 to-rose-500 group-hover:from-red-600 group-hover:to-rose-500 hover:text-violet-300 dark:text-violet-00 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
                         <span className="relative px-3 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                             Reset
                         </span>
